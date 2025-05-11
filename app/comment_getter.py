@@ -1,7 +1,7 @@
 import requests
 import json
-import numpy as np
 import pandas as pd
+import numpy as np
 
 def get_video_id(url):
     video_id = url[:-1].split("/")[-1]
@@ -28,11 +28,10 @@ def create_comments_df(comments) -> pd.DataFrame:
 
     return df
 
-def fetch_comments_vk(video_url):
+def fetch_comments(video_url):
     df = pd.DataFrame()
     video_id = get_video_id(video_url)
     url = f"https://rutube.ru/api/v2/comments/video/{video_id}/?client=wdp&sort_by=popular"
-    print(url)
 
     try:
         response = requests.get(url)

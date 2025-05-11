@@ -1,8 +1,11 @@
 import streamlit as st
 from streamlit.components.v1 import html
-from service_functions import validate_url
+from service_functions import validate_url, is_url_rutube
 import numpy as np
 import matplotlib.pyplot as plt
+from comment_getter import fetch_comments
+from preprocess_text import prepare_data_for_model
+from analyze_comment import get_data_with_predicted_label
 
 # Настройка страницы
 st.set_page_config(page_title="Анализ данных", layout="wide")
@@ -36,27 +39,30 @@ if st.session_state.valid_url:
     with st.container():
         st.subheader("Шаг 2: Визуализация данных")
 
+        if is_url_rutube(url):
+            data = fetch_comments(url)
+        else:
+            # исправить для вк
+            data = fetch_comments(url)
 
+        data, data_for_model = prepare_data_for_model(data, "text")
+        data = get_data_with_predicted_label(data_for_model=data_for_model,
+                                             data=data,
+                                             path_to_model='sklearn-models/log_model.joblib',
+                                             column_with_text='text_prep')
 
-        # Генерация случайных данных для примера
-        np.random.seed(42)
-        data = np.random.randn(100, 3)
+        fig, ax = plt.subplots(1, 3, figsize=(10, 2))
 
-        # Создание графиков
-        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 10))
+        ax[0].pie(data['predicted_label'].value_counts(),
+               labels=['negative', 'positive'],
+               colors=['#FC5A50', '#9ACD32'],
+               autopct='%1.1f%%',
+               startangle=90,
+               wedgeprops={'linewidth': 0.5, 'edgecolor': 'white'})
 
-        # Линейный график
-        ax1.plot(data)
-        ax1.set_title("Динамика показателей")
-        ax1.legend(["Показатель 1", "Показатель 2", "Показатель 3"])
+        plt.tight_layout(pad=0.5)
 
-        # Гистограмма
-        ax2.hist(data, bins=15, alpha=0.5)
-        ax2.set_title("Распределение данных")
-        ax2.legend(["Показатель 1", "Показатель 2", "Показатель 3"])
-
-        plt.tight_layout()
-        st.pyplot(fig)
+        st.pyplot(fig, clear_figure=True)
 
 # Стилизация страницы
 st.markdown("""

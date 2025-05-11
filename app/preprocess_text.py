@@ -1,4 +1,5 @@
 import joblib
+import pandas as pd
 import pymorphy3
 import re
 import numpy as np
@@ -26,8 +27,9 @@ def prepare_data_for_model(data, column_with_text):
 
     tfidf_vectorizer = joblib.load(r"sklearn-models/tfidf_vectorizer.joblib")
 
-    data[column_with_text+'prep'] = clean_text(data[column_with_text])
-    data[column_with_text+'prep'] = lemmatizer_vec(data[column_with_text+'prep'], morph)
-    data[column_with_text+'prep'] = tfidf_vectorizer.transform(data[column_with_text+'prep'])
+    data[f"{column_with_text}_prep"] = clean_text(data[column_with_text])
+    data[f"{column_with_text}_prep"] = lemmatizer_vec(data[f"{column_with_text}_prep"], morph)
+    data = clear_void_rows(data, column_with_text+'_prep')
+    vectorized_data = tfidf_vectorizer.transform(data[f"{column_with_text}_prep"])
 
-    return clear_void_rows(data, column_with_text+'prep')
+    return data, vectorized_data
