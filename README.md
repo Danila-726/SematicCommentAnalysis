@@ -1,5 +1,5 @@
 # SematicCommentAnalysis
-A system for semantic comment analysis. Comment for analysis get from Rutube and VK Видео
+A system for semantic comment analysis. Comment for analysis get from Rutube and VK Video
 
 
 ### In order for vk video comment analysis to work, you need to change the following variables in main.py:
