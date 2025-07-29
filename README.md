@@ -10,7 +10,7 @@ A system for semantic comment analysis. Comment for analysis get from Rutube and
 
 
 ### NOTICE: 
-Analyzing comments from the rootube will work immediately, meaning you don't need to add or change anything.
+Analyzing comments from the Rutube will work immediately, meaning you don't need to add or change anything.
 
 
 ### To start this web app you need to run this in terminal in main directory
